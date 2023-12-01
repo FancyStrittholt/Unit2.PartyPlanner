@@ -1,21 +1,28 @@
+// setting up API URL
 const COHORT = "2310-GHP-ET-WEB-FT-SF";
 const API_URL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/${COHORT}/events`;
 
+// setting up state
 const state = {
   events: [],
 };
 
+// calls API to get all events and updates the state
 async function getEvents() {
   try {
     const response = await fetch(API_URL);
     const data = await response.json();
     state.events = data.data;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
+// function to add an event via API
 async function addEvent(event) {
   event.preventDefault();
   try {
+    // this grabs the form data and manipulating the date and time format
     const form = document.querySelector("form");
     const formData = form.elements;
     const name = formData.theName.value;
@@ -37,6 +44,7 @@ async function addEvent(event) {
         date: dateObject,
       }),
     });
+    // resets the form and rerenders the table
     form.reset();
     render();
   } catch (error) {
@@ -44,6 +52,7 @@ async function addEvent(event) {
   }
 }
 
+// the function that renders the table
 async function render() {
   const table = document.querySelector("#table");
 
@@ -63,11 +72,12 @@ async function render() {
   }
 }
 
+// Creates new row with added data
 function createDataRow(name, description, location, date, id) {
   // creating a new row
   const row = document.createElement("tr");
 
-  // Do I have this data row already in my table?
+  // Do I have this data row already in my table? Keeps from duplicating rows
   const exists = document.getElementById(id);
 
   // Since it is undefined it will not add and loop through to the next one
@@ -91,21 +101,22 @@ function createDataRow(name, description, location, date, id) {
   tdLocation.appendChild(locationText);
   row.appendChild(tdLocation);
 
-  // setting a date column
+  // setting a date column  Put the date string into a date object
   const dateObject = new Date(date);
-  const day = dateObject.toLocaleDateString();
+  const formattedDate = dateObject.toLocaleDateString();
 
   const tdDate = document.createElement("td");
-  const dateText = document.createTextNode(day);
+  const dateText = document.createTextNode(formattedDate);
   tdDate.appendChild(dateText);
   row.appendChild(tdDate);
 
-  // setting the time column
+  // setting the time column calling the time format function from below
   const tdTime = document.createElement("td");
   const timeText = document.createTextNode(formatTime(dateObject));
   tdTime.appendChild(timeText);
   row.appendChild(tdTime);
 
+  // creating and adding the listener to the remove for each row with id
   const button = document.createElement("BUTTON");
   const removeText = document.createTextNode("Remove");
   button.value = id;
@@ -120,6 +131,7 @@ function createDataRow(name, description, location, date, id) {
   return row;
 }
 
+// function to return the time in a easy to read format
 function formatTime(date) {
   const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
   const minutes = (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
@@ -127,8 +139,10 @@ function formatTime(date) {
   return `${hours}:${minutes} ${isPM ? "pm" : "am"}`;
 }
 
+// removes the event when button above is "clicked"
 async function removeEvent(event) {
   event.preventDefault();
+  // deleting row by button id
   try {
     await fetch(API_URL + `/${event.target.value}`, {
       method: "DELETE",
@@ -138,6 +152,7 @@ async function removeEvent(event) {
       },
     });
 
+    // removing the deleted row and rerendering the table so you don't have to refresh
     const deletedRow = document.getElementById(event.target.value);
     deletedRow.remove();
     render();
@@ -146,6 +161,7 @@ async function removeEvent(event) {
   }
 }
 
+// wait till page is loaded before trying to render table
 window.addEventListener("load", () => {
   render();
   const form = document.querySelector("form");
