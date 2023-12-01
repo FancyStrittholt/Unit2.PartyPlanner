@@ -14,23 +14,29 @@ async function getEvents() {
     const data = await response.json();
     state.events = data.data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+}
+
+function getFormData() {
+  // this grabs the form data and manipulating the date and time format
+  const form = document.querySelector("form");
+  const formData = form.elements;
+  const name = formData.theName.value;
+  const description = formData.theDescription.value;
+  const location = formData.theLocation.value;
+  const date = formData.theDate.value;
+  const time = formData.theTime.value;
+  const dateObject = new Date(`${date}T${time}Z`);
+
+  return { name, description, location, dateObject };
 }
 
 // function to add an event via API
 async function addEvent(event) {
   event.preventDefault();
   try {
-    // this grabs the form data and manipulating the date and time format
-    const form = document.querySelector("form");
-    const formData = form.elements;
-    const name = formData.theName.value;
-    const description = formData.theDescription.value;
-    const location = formData.theLocation.value;
-    const date = formData.theDate.value;
-    const time = formData.theTime.value;
-    const dateObject = new Date(`${date}T${time}Z`);
+    const formData = getFormData();
     await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -38,17 +44,18 @@ async function addEvent(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
-        location: location,
-        date: dateObject,
+        name: formData.name,
+        description: formData.description,
+        location: formData.location,
+        date: formData.dateObject,
       }),
     });
     // resets the form and rerenders the table
+    const form = document.querySelector("form");
     form.reset();
     render();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -116,13 +123,20 @@ function createDataRow(name, description, location, date, id) {
   tdTime.appendChild(timeText);
   row.appendChild(tdTime);
 
-  // creating and adding the listener to the remove for each row with id
+  // creating a button, creating and adding the listener to the remove for each row with id
   const button = document.createElement("BUTTON");
   const removeText = document.createTextNode("Remove");
   button.value = id;
   button.addEventListener("click", removeEvent);
   button.appendChild(removeText);
   row.appendChild(button);
+
+  const editButton = document.createElement("button");
+  const editText = document.createTextNode("Edit");
+  editButton.value = id;
+  editButton.addEventListener("click", updateEvent);
+  editButton.appendChild(editText);
+  row.appendChild(editButton);
 
   // setting unique row id
   row.id = id;
@@ -157,7 +171,32 @@ async function removeEvent(event) {
     deletedRow.remove();
     render();
   } catch (error) {
-    console.log(error);
+    console.error(error);
+  }
+}
+
+async function updateEvent(event) {
+  event.preventDefault();
+  try {
+    const formData = getFormData();
+    const response = await fetch(API_URL + `/${event.target.value}`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        description: formData.description,
+        location: formData.location,
+        date: formData.dateObject,
+      }),
+    });
+    const deletedRow = document.getElementById(event.target.value);
+    deletedRow.remove();
+    render();
+  } catch (error) {
+    console.error(error);
   }
 }
 
