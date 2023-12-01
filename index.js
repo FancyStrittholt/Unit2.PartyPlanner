@@ -126,6 +126,7 @@ function createDataRow(name, description, location, date, id) {
   // creating a button, creating and adding the listener to the remove for each row with id
   const button = document.createElement("BUTTON");
   const removeText = document.createTextNode("Remove");
+  button.classList.add("buttonclass");
   button.value = id;
   button.addEventListener("click", removeEvent);
   button.appendChild(removeText);
@@ -133,6 +134,7 @@ function createDataRow(name, description, location, date, id) {
 
   const editButton = document.createElement("button");
   const editText = document.createTextNode("Edit");
+  editButton.classList.add("editbuttonclass");
   editButton.value = id;
   editButton.addEventListener("click", updateEvent);
   editButton.appendChild(editText);
@@ -175,6 +177,7 @@ async function removeEvent(event) {
   }
 }
 
+// decided to add an edit button after watching Megan demo
 async function updateEvent(event) {
   event.preventDefault();
   try {

@@ -4,33 +4,47 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Party Planner</title>
-        <script src="index.js"></script>
         <link rel="stylesheet" href="index.css" />
+        <script src="index.js"></script>
     </head>
     <body>
-        <table id="table">
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Remove/Edit</th>
-            </tr>
-        </table>
-        <form>
-            <label for="theName">Name</label><br />
-            <input type="text" name="theName" /><br />
-            <label for="theDescription">Desciption</label><br />
-            <input type="text" name="theDescription" /><br />
-            <label for="theLocation">Location</label><br />
-            <input type="text" name="theLocation" /><br />
-            <label for="theDate">Date</label><br />
-            <input type="date" name="theDate" /><br />
-            <label for="theTime">Time</label><br />
-            <input type="time" name="theTime" /><br />
-            <br />
-            <input type="submit" value="Send Request" />
-        </form>
+        <div class="title">
+            <h2>&#127880;</h2>
+            <h1>Party Planner</h1>
+            <h2>&#127880;</h2>
+        </div>
+        <p>
+            Welcome to my party planning site. Please enter your party in the form below. If you need to change or
+            remove your event, please do so 24 hours in advance.
+        </p>
+        <hr />
+        <div class="tablecenter">
+            <table id="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Remove or Edit</th>
+                </tr>
+            </table>
+        </div>
+        <div class="formcenter">
+            <form>
+                <label for="theName">Name</label><br />
+                <input type="text" name="theName" /><br />
+                <label for="theDescription">Desciption</label><br />
+                <input type="text" name="theDescription" /><br />
+                <label for="theLocation">Location</label><br />
+                <input type="text" name="theLocation" /><br />
+                <label for="theDate">Date</label><br />
+                <input type="date" name="theDate" /><br />
+                <label for="theTime">Time</label><br />
+                <input type="time" name="theTime" /><br />
+                <br />
+                <input type="submit" value="Send Request" />
+            </form>
+        </div>
     </body>
 </html>

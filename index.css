@@ -1,0 +1,76 @@
+ul {
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  flex: 1 1 300px;
+  max-height: 200px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+li img {
+  max-width: 100%;
+  max-height: 30%;
+}
+
+.tablecenter {
+  display: flex;
+  justify-content: center;
+}
+
+.formcenter {
+  display: flex;
+  justify-content: center;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  color: rgb(186, 36, 206);
+}
+
+p {
+  display: flex;
+  justify-content: center;
+  color: pink;
+}
+
+.buttonclass {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: aqua;
+  color: black;
+}
+
+.editbuttonclass {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: rgb(156, 247, 144);
+  color: black;
+}
+
+th {
+  color: rgb(226, 43, 156);
+  font-size: medium;
+}
+
+hr.new5 {
+  border: 10px solid green;
+  border-radius: 5px;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
