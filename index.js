@@ -10,39 +10,51 @@ async function getEvents() {
     const response = await fetch(API_URL);
     const data = await response.json();
     state.events = data.data;
-    console.log(data);
   } catch (error) {}
 }
 
-async function addEvent() {
+async function addEvent(event) {
+  event.preventDefault();
   try {
-    const response = await fetch(API_URL, {
+    const form = document.querySelector("form");
+    const formData = form.elements;
+    const name = formData.theName.value;
+    const description = formData.theDescription.value;
+    const location = formData.theLocation.value;
+    const date = formData.theDate.value;
+    const time = formData.theTime.value;
+    const dateObject = new Date(`${date}T${time}Z`);
+    await fetch(API_URL, {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        name: "",
-        description: "",
-        location: "",
-        date: "",
-        time: "",
+        name: name,
+        description: description,
+        location: location,
+        date: dateObject,
       }),
     });
-
-    // const data = await response.json();
-    // console.log(data);
-  } catch (error) {}
+    form.reset();
+    render();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function render() {
   const table = document.querySelector("#table");
-  await getEvents();
 
+  await getEvents();
   for (const item of state.events) {
     const row = createDataRow(
       item.name,
       item.description,
       item.location,
       item.date,
-      item.time
+      item.id
     );
     // adding new row to table
     if (row) {
@@ -51,18 +63,12 @@ async function render() {
   }
 }
 
-// addEventListener("submit", (submit) => {});
-
-// onsubmit = (submit) => {};
-
-function createDataRow(name, description, location, date, time) {
+function createDataRow(name, description, location, date, id) {
   // creating a new row
   const row = document.createElement("tr");
 
   // Do I have this data row already in my table?
-  const exists = document.getElementById(
-    name + description + location + date + time
-  );
+  const exists = document.getElementById(id);
 
   // Since it is undefined it will not add and loop through to the next one
   if (exists) return;
@@ -100,8 +106,15 @@ function createDataRow(name, description, location, date, time) {
   tdTime.appendChild(timeText);
   row.appendChild(tdTime);
 
+  const button = document.createElement("BUTTON");
+  const removeText = document.createTextNode("Remove");
+  button.value = id;
+  button.addEventListener("click", removeEvent);
+  button.appendChild(removeText);
+  row.appendChild(button);
+
   // setting unique row id
-  row.id = name + description + location + date + time;
+  row.id = id;
 
   // returning newly created row
   return row;
@@ -114,11 +127,27 @@ function formatTime(date) {
   return `${hours}:${minutes} ${isPM ? "pm" : "am"}`;
 }
 
+async function removeEvent(event) {
+  event.preventDefault();
+  try {
+    await fetch(API_URL + `/${event.target.value}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    const deletedRow = document.getElementById(event.target.value);
+    deletedRow.remove();
+    render();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 window.addEventListener("load", () => {
   render();
+  const form = document.querySelector("form");
+  form.addEventListener("submit", addEvent);
 });
-
-// trying to add my event listener for the submit button
-// incomplete
-// addEventListener("submit", (submit) => {});
-// onsubmit = (submit) => {};
